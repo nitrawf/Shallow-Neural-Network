@@ -32,9 +32,8 @@ def loaddata():
 
 def layer_sizes(X, Y):  
     n_x = X.shape[0] # size of input layer
-    n_h = 25
     n_y = Y.shape[0] # size of output layer
-    return (n_x, n_h, n_y)
+    return (n_x, n_y)
 
 def initialize_parameters(n_x, n_h, n_y):
     W1 = np.random.rand(n_h,n_x)*0.01
@@ -112,7 +111,7 @@ def update_parameters(parameters, grads, learning_rate = 1.2):
 
 def nn_model(X, Y, n_h, num_iterations = 10000, print_cost=False):
     n_x = layer_sizes(X, Y)[0]
-    n_y = layer_sizes(X, Y)[2]    
+    n_y = layer_sizes(X, Y)[1]    
     parameters = initialize_parameters(n_x, n_h, n_y)
     costs=[]
     for i in range(0, num_iterations):
@@ -145,12 +144,13 @@ X_trainset=X[:,0:400]
 Y_trainset=Y[:,0:400]
 X_testset=X[:,400:]
 Y_testset=Y[:,400:]
-costs,parameters = nn_model(X_trainset, Y_trainset, n_h = 4, num_iterations = 50000, print_cost=True)
+n_h=7
+costs,parameters = nn_model(X_trainset, Y_trainset, n_h , num_iterations = 10000, print_cost=True)
 costs = np.squeeze(costs)
 plt.plot(costs)
 plt.ylabel('cost')
 plt.xlabel('iterations (per hundreds)')
-plt.title("Hidden Layers")
+plt.title("Hidden Layers: %d"%n_h)
 plt.show()
 
 
