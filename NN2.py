@@ -90,7 +90,7 @@ def backward_propagation(parameters, cache, X, Y):
     return grads
 
 
-def update_parameters(parameters, grads, learning_rate = 1.2):   
+def update_parameters(parameters, grads, learning_rate = 0.5):   
     W1 = parameters["W1"]
     b1 = parameters["b1"]
     W2 = parameters["W2"]
@@ -99,10 +99,10 @@ def update_parameters(parameters, grads, learning_rate = 1.2):
     db1 = grads["db1"]
     dW2 = grads["dW2"]
     db2 = grads["db2"]   
-    W1 = W1-dW1
-    b1 = b1-db1
-    W2 = W2-dW2
-    b2 = b2-db2
+    W1 = W1-learning_rate*dW1
+    b1 = b1-learning_rate*db1
+    W2 = W2-learning_rate*dW2
+    b2 = b2-learning_rate*db2
     parameters = {"W1": W1,
                   "b1": b1,
                   "W2": W2,
@@ -145,7 +145,7 @@ Y_trainset=Y[:,0:400]
 X_testset=X[:,400:]
 Y_testset=Y[:,400:]
 n_h=7
-costs,parameters = nn_model(X_trainset, Y_trainset, n_h , num_iterations = 10000, print_cost=True)
+costs,parameters = nn_model(X_trainset, Y_trainset, n_h , num_iterations = 100000, print_cost=True)
 costs = np.squeeze(costs)
 plt.plot(costs)
 plt.ylabel('cost')
@@ -153,9 +153,8 @@ plt.xlabel('iterations (per hundreds)')
 plt.title("Hidden Layers: %d"%n_h)
 plt.show()
 
+predictions_train = predict(parameters, X_trainset)
+print ('Accuracy for training set: %d' % float((np.dot(Y_trainset,predictions_train.T) + np.dot(1-Y_trainset,1-predictions_train.T))/float(Y_trainset.size)*100) + '%')
 
-predictions = predict(parameters, X_trainset)
-print ('Accuracy for training set: %d' % float((np.dot(Y_trainset,predictions.T) + np.dot(1-Y_trainset,1-predictions.T))/float(Y_trainset.size)*100) + '%')
-
-predictions = predict(parameters, X_testset)
-print ('Accuracy for test set: %d' % float((np.dot(Y_testset,predictions.T) + np.dot(1-Y_testset,1-predictions.T))/float(Y_testset.size)*100) + '%')
+predictions_test = predict(parameters, X_testset)
+print ('Accuracy for test set: %d' % float((np.dot(Y_testset,predictions_test.T) + np.dot(1-Y_testset,1-predictions_test.T))/float(Y_testset.size)*100) + '%')
